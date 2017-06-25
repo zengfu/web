@@ -47,7 +47,7 @@ func HashPasswd(pass string) string {
 	return MD5(pass + "whyengineer")
 }
 func OpenDb() (*gorm.DB, error) {
-	return gorm.Open("mysql", "root:71451085Zf*@/test?charset=utf8&parseTime=True&loc=Local")
+	return gorm.Open("mysql", "root:71451085a@/db1?charset=utf8&parseTime=True&loc=Local")
 }
 func CheckName(username string) bool {
 	db, _ := OpenDb()
