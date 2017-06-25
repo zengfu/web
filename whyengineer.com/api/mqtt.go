@@ -6,6 +6,9 @@ import (
 	"github.com/labstack/echo"
 	"github.com/zengfu/web/broker"
 	"net/http"
+	"fmt"
+	"net/url"
+	"crypto/tls"
 )
 
 var (
@@ -21,11 +24,31 @@ type Client struct {
 func LaunchMqtt(protocol string) error {
 	server, err := transport.Launch(protocol)
 	if err != nil {
+		fmt.Println(err)
 		return (err)
 	}
 	engine.Accept(server)
 	//defer engine.Close()
 	return nil
+}
+func LaunchMqtts(protocol string) error {
+	urlParts, err := url.ParseRequestURI(protocol)
+	if err != nil {
+		return err
+	}
+	cer, err := tls.LoadX509KeyPair("/usr/local/apache/conf/2_www.whyengineer.com.crt", "/usr/local/apache/conf/3_www.whyengineer.com.key")
+	if err!=nil{
+		return err
+	}
+	config := &tls.Config{Certificates: []tls.Certificate{cer}}
+        server, err := transport.NewSecureWebSocketServer(urlParts.Host,config)
+        if err != nil {
+                fmt.Println(err)
+                return (err)
+        }
+        engine.Accept(server)
+        //defer engine.Close()
+        return nil
 }
 func CloseMqtt() {
 	engine.Close()

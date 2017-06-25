@@ -9,7 +9,7 @@ import (
 
 func main() {
 	api.LaunchMqtt("tcp://0.0.0.0:1883")
-	api.LaunchMqtt("ws://0.0.0.0:1884")
+	api.LaunchMqtts("wss://0.0.0.0:1884")
 	defer api.CloseMqtt()
 	e := echo.New()
 	e.Use(session.Middleware(sessions.NewCookieStore([]byte("secret"))))
@@ -32,5 +32,6 @@ func main() {
 	e.GET("/api/checkusername", api.CheckUsername)
 	e.POST("/api/signin", api.Signin)
 	e.POST("/api/login", api.Login)
-	e.Logger.Fatal(e.Start("0.0.0.0:8000"))
+	e.Logger.Fatal(e.Start("127.0.0.1:8080"))
+//	e.Logger.Fatal(e.Start("0.0.0.0:8080"))
 }
