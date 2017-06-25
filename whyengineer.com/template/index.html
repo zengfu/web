@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<link href="https://cdn.bootcss.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" rel="stylesheet">
+		<script src="https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+		<script src="https://cdn.bootcss.com/tether/1.4.0/js/tether.min.js"></script>
+		<script src="https://cdn.bootcss.com/bootstrap/4.0.0-alpha.6/js/bootstrap.min.js"></script>
+		
+	</head>
+	<body>
+		<div class="container">
+		<nav class="navbar navbar-toggleable-md navbar-light bg-faded" style="background-color: white;font-weight: bolder;">
+  <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#mainNavigation" aria-controls="mainNavigation" aria-expanded="false" aria-label="Pokaż lub ukryj nawigację">
+	<span class="navbar-toggler-icon"></span>
+  </button>
+  <a class="navbar-brand" href="#">
+    <img src="/images/logo1654x1654.png" width="32" height="32" class="d-inline-block align-top rounded" alt="idź na start webroad.pl">
+    WhyEngineer
+  </a>
+
+	<div class="collapse navbar-collapse" id="mainNavigation">
+		<ul class="navbar-nav mr-auto">
+			<li class="nav-item active">
+				<a class="nav-link" href="/">Home<span class="sr-only">(jesteś tutaj)</span></a>
+			</li>
+			<li class="nav-item dropdown">
+				<a class="nav-link dropdown-toggle" href="#" id="userMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+					Hardware
+				</a>
+				<div class="dropdown-menu dropdown-menu-right" aria-labelledby="userMenu">
+					<a class="dropdown-item" href="#">ESP32</a>
+					<div class="dropdown-divider"></div>
+					<a class="dropdown-item disabled" href="#">Waiting...</a>
+				</div>
+			</li>
+			<li class="nav-item dropdown">
+				<a class="nav-link dropdown-toggle" href="#" id="userMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+					Software
+				</a>
+				<div class="dropdown-menu dropdown-menu-right" aria-labelledby="userMenu">
+					<a class="dropdown-item" href="/mqtt">MQTT</a>
+					<a class="dropdown-item" href="#">Dog-Tunnel</a>
+					<div class="dropdown-divider"></div>
+					<a class="dropdown-item disabled" href="#">Waiting...</a>
+				</div>
+			</li>
+			<li class="nav-item">
+				<a class="nav-link" href="https://wiki.whyengineer.com">Wiki</a>
+			</li>
+		</ul>
+		 <div>
+		 	 <button class="btn btn-outline-info my-2 my-sm-0" id="login" data-toggle="modal" data-target="#loginModal">Login/Register</button>
+		 	<div class="modal fade" id="loginModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+			 <div class="modal-dialog" role="document">
+			    <div class="modal-content">
+			      <div class="modal-header">
+			        <h5 class="modal-title" id="exampleModalLongTitle">Login/Register</h5>
+			        <button type="button" class="close" data-dismiss="modal" aria-label="Close" id="modal_close">
+			          <span aria-hidden="true">&times;</span>
+			        </button>
+			      </div>
+			      <div class="modal-body">
+			      	<form id="loginform">
+					  <div class="form-group" id="username_div">
+					    <label for="exampleInputEmail1">Username</label>
+					    <input type="email" class="form-control form-control-warning" aria-describedby="emailHelp" placeholder="Enter Username" name="username" id="username">
+					    <div id="usernameinfo" class="form-control-feedback">username is empty</div>
+					  </div>
+					  <div class="form-group" id="password_div">
+					    <label for="exampleInputPassword1">Password</label>
+					    <input type="password" class="form-control form-control-warning" id="password" placeholder="Password" name="password">
+					     <div id="passwordinfo" class="form-control-feedback"></div>
+					  </div>
+					  <div class="modal-footer">
+				        <a href="/register">Register</a>
+				        <button type="button" class="btn btn-primary" type="submit" id="submit">Login</button>
+				      </div>
+					</form>
+			      </div>
+			      
+			    </div>
+			  </div>
+			</div>
+			<div id="userinfo" hidden>
+		 		<a class="nav-link dropdown-toggle" href="#"  data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" id="logineduser">
+				</a>
+				<div class="dropdown-menu dropdown-menu-right" aria-labelledby="userMenu">
+					<a class="dropdown-item disabled" href="#">Setting</a>
+					<div class="dropdown-divider"></div>
+					<a class="dropdown-item" href="#" id="logout">Logout</a>
+				</div>
+			</div>
+		 </div>
+
+	</div>
+</nav>
+	<script type="text/javascript">
+		$( document ).ready(function() {
+ 			console.log("ready")
+		});
+		//$("#userinfo").hide()
+		$.ajax({
+				  type: 'GET',
+				  url: "/api/checksession",
+				  dataType : "json",}).done(function(data){
+				  	var json=$.parseJSON(data);
+				  	if(json.err==0){
+				  		$('#login').hide();
+				  		$('#logineduser').text(json.username);
+				  		$('#userinfo').removeAttr('hidden');
+				  	}
+				  });
+		$("#logout").click(function(event) {
+			/* Act on the event */
+			console.log("logout")
+			$.ajax({
+				  type: 'GET',
+				  url: "/api/cleansession",
+				  });
+			$('#userinfo').prop('hidden',true);
+			$('#login').show();
+		});
+		$("#usernameinfo").hide()
+		$("#passwordinfo").hide()
+		$("#submit").click(function () {
+			if ( $( "#username" ).val().length === 0) {
+	        	event.preventDefault();
+	        	$("#username_div").addClass("has-warning")
+	        	$("#usernameinfo").show()
+	        	$("#passwordinfo").hide()
+		    } else if($( "#password" ).val().length === 0) {
+		 		event.preventDefault();
+		        $("#password_div").addClass("has-warning")
+		        $("#passwordinfo").text("password is empty")
+	        	$("#passwordinfo").show()
+		    }else{
+		    	// Run $.ajax() here
+		    	$("#usernameinfo").hide()
+				$("#passwordinfo").hide()
+				$("#username_div").removeClass('has-warning')
+				$("#password_div").removeClass('has-warning')
+		    	console.log("ready")
+		    	$.ajax({
+				  type: 'POST',
+				  url: "/api/login",
+				  data: $('#loginform').serialize(),
+				  dataType : "json",})
+		    	  .done(function( data ) {
+		    	  	console.log(data)
+				    var json=$.parseJSON(data)
+				   	if(json.err==0){
+				   		$('#modal_close').trigger('click');
+				   		$('#login').hide();
+				   		$('#userinfo').removeAttr('hidden');
+				   		$('#logineduser').text(json.username);
+				   	}else{
+				   		$("#username_div").addClass('has-warning')
+				   		$("#password_div").addClass('has-warning')
+				   		$("#passwordinfo").text("password error")
+				   		$("#passwordinfo").show()
+				   	}
+				  })
+				  .fail(function( xhr, status, errorThrown) {
+				    console.log( "Status: " + status ); 
+				  });
+				 
+		
+				
+		    }
+		});
+	</script>
+</div>
+<div style="text-align: center;background:#625" id="index_png">
+		<img src="images/logo1654x1654.png" height="640px" width="640px">
+</div>
+</body>
+</html>

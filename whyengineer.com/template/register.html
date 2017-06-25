@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<link href="https://cdn.bootcss.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" rel="stylesheet">
+		<script src="https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+		<script src="https://cdn.bootcss.com/tether/1.4.0/js/tether.min.js"></script>
+		<script src="https://cdn.bootcss.com/bootstrap/4.0.0-alpha.6/js/bootstrap.min.js"></script>
+		
+	</head>
+	<body>
+		<div class="container">
+		<nav class="navbar navbar-toggleable-md navbar-light bg-faded" style="background-color: white;font-weight: bolder;">
+  <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#mainNavigation" aria-controls="mainNavigation" aria-expanded="false" aria-label="Pokaż lub ukryj nawigację">
+	<span class="navbar-toggler-icon"></span>
+  </button>
+  <a class="navbar-brand" href="#">
+    <img src="/images/logo1654x1654.png" width="32" height="32" class="d-inline-block align-top rounded" alt="idź na start webroad.pl">
+    WhyEngineer
+  </a>
+
+	<div class="collapse navbar-collapse" id="mainNavigation">
+		<ul class="navbar-nav mr-auto">
+			<li class="nav-item active">
+				<a class="nav-link" href="#">Home<span class="sr-only">(jesteś tutaj)</span></a>
+			</li>
+			<li class="nav-item dropdown">
+				<a class="nav-link dropdown-toggle" href="#" id="userMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+					Hardware
+				</a>
+				<div class="dropdown-menu dropdown-menu-right" aria-labelledby="userMenu">
+					<a class="dropdown-item" href="#">ESP32</a>
+					<div class="dropdown-divider"></div>
+					<a class="dropdown-item disabled" href="#">Waiting...</a>
+				</div>
+			</li>
+			<li class="nav-item dropdown">
+				<a class="nav-link dropdown-toggle" href="#" id="userMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+					Software
+				</a>
+				<div class="dropdown-menu dropdown-menu-right" aria-labelledby="userMenu">
+					<a class="dropdown-item" href="#">MQTT</a>
+					<a class="dropdown-item" href="#">Dog-Tunnel</a>
+					<div class="dropdown-divider"></div>
+					<a class="dropdown-item disabled" href="#">Waiting...</a>
+				</div>
+			</li>
+			<li class="nav-item">
+				<a class="nav-link" href="https://wiki.whyengineer.com">Wiki</a>
+			</li>
+		</ul>
+		<button class="btn btn-outline-info" id="backtohome">Back</buttion>
+	</div>
+</nav>
+<div style="height: 100px">
+</div>
+<form id="signin">
+	<div class="form-group" id="username_group">
+		<div class="row">
+		  <label for="text-input" class="offset-sm-2 col-sm-2 col-form-label">Username:</label>
+		  <div class="col-6">
+		    <input class="form-control form-control-success form-control-warning" type="text"  id="text-input" name="username">
+		  </div>
+	  	</div>
+	  	<div class="row"> 
+	  		<div class="form-control-feedback offset-sm-2 col-sm-8" style="text-align: right;" hidden="true" id="username_info">
+	  		</div>
+	  	</div>
+	</div>
+	<div class="form-group" id="email_group">
+		<div class="row">
+		  <label for="email-input" class="offset-sm-2 col-sm-2 col-form-label">Email:</label>
+		  <div class="col-6">
+		    <input class="form-control form-control-success form-control-warning" type="email"  id="email-input" name="email">
+		  </div>
+	  	</div>
+	  	<div class="row"> 
+	  		<div class="form-control-feedback offset-sm-2 col-sm-8" style="text-align: right;" hidden="true" id="email_info">
+	  		</div>
+	  	</div>
+	</div>
+	<div class="form-group" id="pw1_group">
+		<div class="row">
+		  <label for="pw1-input" class="offset-sm-2 col-sm-2 col-form-label">Password:</label>
+		  <div class="col-6">
+		    <input class="form-control form-control-success form-control-warning" type="password"  id="pw1-input" name="password1">
+		  </div>
+	  	</div>
+	  	<div class="row"> 
+	  		<div class="form-control-feedback offset-sm-2 col-sm-8" style="text-align: right;" hidden="true" id="pw1_info">
+	  		</div>
+	  	</div>
+	</div>
+	<div class="form-group" id="pw2_group">
+		<div class="row">
+		  <label for="pw2-input" class="offset-sm-2 col-sm-2 col-form-label">Password again:</label>
+		  <div class="col-6">
+		    <input class="form-control form-control-success form-control-warning" type="password"  id="pw2-input" name="password2">
+		  </div>
+	  	</div>
+	  	<div class="row"> 
+	  		<div class="form-control-feedback offset-sm-2 col-sm-8" style="text-align: right;" hidden="true" id="pw2_info">
+	  		</div>
+	  	</div>
+	</div>
+	<HR align=center width=100% color=#625 SIZE=3 >
+	<div class="form-group row">
+      <div class="offset-sm-8 col-sm-2" style="text-align: right">
+        <button class="btn btn-primary" id="submit">Submit</button>
+      </div>
+    </div>
+</form>
+<div id="success" style="text-align: center;" hidden="true">
+	<h1>Register successful!</h1>
+</div>
+	<script type="text/javascript">
+	var username=false;
+	var password=false;
+	var email=false;
+		$( document ).ready(function() {
+ 			console.log("ready")
+		});
+		$('#backtohome').click(function(event) {
+			/* Act on the event */
+			 $(window.location).attr('href', '/');
+		});
+		$('#text-input').focusout(function(event) {
+			/* Act on the event */
+			console.log($(this).val())
+			if ( $(this).val().length === 0){
+				$("#username_group").removeClass('has-success');
+				$("#username_group").addClass('has-warning');
+				$('#username_info').text('the username is empty');
+				$('#username_info').removeAttr('hidden');
+				username=false
+				return
+			}
+			$.ajax({
+				  type: 'GET',
+				  url: "/api/checkusername",
+				  data: $(this).serialize(),
+				  dataType : "json",}).done(function(data){
+				  	var json=$.parseJSON(data);
+				  	if(json.err==0){
+				  		$("#username_group").removeClass('has-warning');
+				  		$("#username_group").addClass('has-success');
+				  		$('#username_info').attr('hidden','true');
+				  		username=true
+				  	}else{
+				  		$("#username_group").removeClass('has-success');
+				  		$("#username_group").addClass('has-warning');
+				  		$('#username_info').text('the username exited');
+				  		$('#username_info').removeAttr('hidden');
+				  		username=false
+				  	}
+				  });
+		});
+		$('#email-input').focusout(function(event) {
+			/* Act on the event */
+			console.log($(this).val());
+			var search_str= /^[\w\-\.]+@[\w\-\.]+(\.\w+)+$/;
+			var email_val=$(this).val();
+			if((!search_str.test(email_val))){
+				//$(this).focus();
+				$("#email_group").removeClass('has-success');
+				$("#email_group").addClass('has-warning');
+				$('#email_info').text('the email format is error');
+				$('#email_info').removeAttr('hidden');
+				email=false
+			}else{
+				$("#email_group").removeClass('has-warning');
+				$("#email_group").addClass('has-success');
+				$('#email_info').attr('hidden','true');
+				email=true
+			}
+			
+		});
+		$('#pw1-input').focusout(function(event) {
+			/* Act on the event */
+			if ( $(this).val().length === 0){
+				$("#pw1_group").removeClass('has-success');
+				$("#pw1_group").addClass('has-warning');
+				$('#pw1_info').text('the password is empty');
+				$('#pw1_info').removeAttr('hidden');
+				return
+			}else{
+				$("#pw1_group").removeClass('has-warning');
+				$("#pw1_group").addClass('has-success');
+				$('#pw1_info').attr('hidden','true');
+				console.log(username,email)
+			}			
+		});
+		$('#pw2-input').focusout(function(event) {
+			/* Act on the event */
+			if ( $(this).val().length === 0){
+				$("#pw2_group").removeClass('has-success');
+				$("#pw2_group").addClass('has-warning');
+				$('#pw2_info').text('the password is empty');
+				$('#pw2_info').removeAttr('hidden');
+				return
+			}else{
+				if($(this).val()==$('#pw1-input').val()){
+					$("#pw2_group").removeClass('has-warning');
+					$("#pw2_group").addClass('has-success');
+					$('#pw2_info').attr('hidden','true');
+					password=true;
+				}else{
+					$("#pw2_group").removeClass('has-success');
+					$("#pw2_group").addClass('has-warning');
+					$('#pw2_info').text('the password is different');
+					$('#pw2_info').removeAttr('hidden');
+				}
+			}			
+		});
+		$('#submit').click(function(event) {
+			event.preventDefault();
+			if(email&&password&&username){
+				$.ajax({
+				  type: 'POST',
+				  url: "/api/signin",
+				  data: $('#signin').serialize(),
+				  dataType : "json",})
+		    	  .done(function( data ) {
+		    	  	$('#signin').hide()
+		    	  	$('#success').removeAttr('hidden');
+		    	  	//$(window.location).attr('href', '/').delay(2000)
+		    	  	
+		    	  });
+  
+			}else{
+				return
+			}
+		});
+		//$("#userinfo").hide()
+	</script>
+</div>
+</body>
+</html>
