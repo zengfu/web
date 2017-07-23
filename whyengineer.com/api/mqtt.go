@@ -3,6 +3,7 @@ package api
 import (
 	"encoding/json"
 	"github.com/gomqtt/transport"
+	_ "github.com/gomqtt/transport"
 	"github.com/labstack/echo"
 	"github.com/zengfu/web/broker"
 	"net/http"
@@ -22,7 +23,8 @@ type Client struct {
 }
 
 func LaunchMqtt(protocol string) error {
-	server, err := transport.Launch(protocol)
+	l := transport.NewLauncher()
+	server, err := l.Launch(protocol)
 	if err != nil {
 		fmt.Println(err)
 		return (err)
